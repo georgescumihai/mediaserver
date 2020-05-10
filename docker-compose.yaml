@@ -11,32 +11,10 @@ services:
       - 9091:9091
     networks:
       - internal
-    environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIME_ZONE}
-      - OPENVPN_PROVIDER=${VPN_PROVIDER}
-      - OPENVPN_USERNAME=user
-      - OPENVPN_PASSWORD=pass
-      - CREATE_TUN_DEVICE=true
-      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 300
-      - LOCAL_NETWORK=192.168.1.0/24      
-      - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
-      - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_PASSWORD}
-      - TRANSMISSION_RPC_USERNAME=${TRANSMISSION_USERNAME}
-      - TRANSMISSION_SPEED_LIMIT_UP=3000
-      - TRANSMISSION_SPEED_LIMIT_UP_ENABLED=true
-      - TRANSMISSION_SPEED_LIMIT_DOWN=3000
-      - TRANSMISSION_SPEED_LIMIT_DOWN_ENABLED=true
-      - TRANSMISSION_RATIO_LIMIT=1
-      - TRANSMISSION_RATIO_LIMIT_ENABLED=true
-      - TRANSMISSION_DOWNLOAD_QUEUE_SIZE=2
-      - TRANSMISSION_INCOMPLETE_DIR=/data/incomplete
-      - TRANSMISSION_INCOMPLETE_DIR_ENABLED=true
-      - TRANSMISSION_WATCH_DIR=/downloads
-      - TRANSMISSION_WATCH_DIR_ENABLED=true
-      - TRANSMISSION_DOWNLOAD_DIR=/data/completed
-      - TRANSMISSION_WEB_UI=combustion
+    env_file:
+      - transmission.env
+      - transmission_authentication.env
+      - compose.env
     volumes:
       - ${MOUNT_POINT}/transmission:/data
       - ${DOWNLOAD_FOLDER}/completed:/data/completed
@@ -52,10 +30,8 @@ services:
       - 7878:7878
     networks:
       - internal
-    environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIME_ZONE}
+    env_file:
+      - compose.env
     volumes:
       - ${MOUNT_POINT}/radarr-config:/config
       - ${MOVIES_FOLDER}/:/downloads
@@ -73,10 +49,8 @@ services:
       - 9117:9117
     networks:
       - internal
-    environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIME_ZONE}
+    env_file:
+      - compose.env
     volumes:
       - ${MOUNT_POINT}/jackett/config/:/config
       - ${MOUNT_POINT}/jackett/downloads/:/downloads
@@ -95,10 +69,9 @@ services:
       - 32412:32412/udp
       - 32413:32413/udp
       - 32414:32414/udp
+    env_file:
+      - compose.env
     environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIME_ZONE}
       - ADVERTISE_IP=http://192.168.1.100:32400/
     hostname: plex
     networks:
