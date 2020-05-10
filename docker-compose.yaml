@@ -81,6 +81,20 @@ services:
       - ${DOWNLOAD_FOLDER}/completed:/data/completed_downloads
       - ${MOVIES_FOLDER}:/data/movies
 
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    env_file:
+      - compose.env
+    networks:
+      - internal
+    volumes:
+      - ${MOUNT_POINT}/bazarr/config:/config
+      - ${MOVIES_FOLDER}:/movies
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
 networks:
   internal:
     driver: bridge
